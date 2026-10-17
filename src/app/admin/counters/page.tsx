@@ -189,19 +189,19 @@ export default function CountersPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-4 sm:pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <MonitorCheck className="w-6 h-6 text-indigo-400" />
-            Ventanillas y Puestos de Atención
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+            <MonitorCheck className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400 shrink-0" />
+            <span>Ventanillas y Puestos de Atención</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Configura los escritorios físicos de atención, sucursal a la que pertenecen y los trámites habilitados.
           </p>
         </div>
         <button
           onClick={openCreateModal}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 transition self-start sm:self-auto"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 transition w-full sm:w-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Nueva Ventanilla
@@ -215,46 +215,46 @@ export default function CountersPage() {
           <span>Cargando ventanillas...</span>
         </div>
       ) : counters.length === 0 ? (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 sm:p-12 text-center">
           <MonitorCheck className="w-12 h-12 text-slate-600 mx-auto mb-3" />
           <h3 className="text-base font-semibold text-slate-200">No hay ventanillas configuradas</h3>
           <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-            Crea ventanillas como "Ventanilla 1", "Módulo VIP" para que los agentes puedan iniciar sesión y llamar turnos.
+            Crea ventanillas como &quot;Ventanilla 1&quot;, &quot;Módulo VIP&quot; para que los agentes puedan iniciar sesión y llamar turnos.
           </p>
           <button
             onClick={openCreateModal}
-            className="mt-4 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition"
+            className="mt-4 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition cursor-pointer"
           >
             Crear Ventanilla
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {counters.map((c) => {
             const branch = branches.find((b) => b.id === c.branchId);
             return (
               <div
                 key={c.id}
-                className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between group hover:border-slate-700 transition"
+                className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col justify-between group hover:border-slate-700 transition"
               >
                 <div>
                   <div className="flex items-start justify-between gap-3 mb-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-emerald-600/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-9 h-9 rounded-xl bg-emerald-600/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
                         <MonitorCheck className="w-4.5 h-4.5" />
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-slate-100 text-sm leading-tight">{c.name}</h3>
-                        <span className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                          <Building2 className="w-3 h-3 text-slate-500" />
-                          {branch?.name || 'Sucursal desconocida'}
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-slate-100 text-sm leading-tight truncate">{c.name}</h3>
+                        <span className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5 truncate">
+                          <Building2 className="w-3 h-3 text-slate-500 shrink-0" />
+                          <span className="truncate">{branch?.name || 'Sucursal desconocida'}</span>
                         </span>
                       </div>
                     </div>
 
                     <button
                       onClick={() => toggleActive(c)}
-                      className={`px-2 py-0.5 rounded-full text-[10px] font-medium border flex items-center gap-1 transition ${
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-medium border flex items-center gap-1 transition shrink-0 cursor-pointer ${
                         c.active
                           ? 'bg-emerald-950/40 text-emerald-400 border-emerald-500/30'
                           : 'bg-slate-800 text-slate-400 border-slate-700'
@@ -298,14 +298,14 @@ export default function CountersPage() {
                 <div className="pt-3 border-t border-slate-800/80 flex items-center justify-end gap-2">
                   <button
                     onClick={() => openEditModal(c)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition"
+                    className="p-2 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition cursor-pointer"
                     title="Editar Ventanilla"
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(c.id)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition"
+                    className="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
                     title="Eliminar Ventanilla"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -319,11 +319,11 @@ export default function CountersPage() {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-5 sm:p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>

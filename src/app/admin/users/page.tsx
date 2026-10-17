@@ -290,134 +290,229 @@ export default function UsersManagementPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-4 sm:pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <Users className="w-6 h-6 text-indigo-400" />
-            Gestión de Usuarios y Roles
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+            <Users className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400 shrink-0" />
+            <span>Gestión de Usuarios y Roles</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Administra, edita y crea cuentas de agentes, tótems táctiles y administradores.
           </p>
         </div>
         <button
           onClick={openCreateModal}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 transition self-start sm:self-auto cursor-pointer"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 transition w-full sm:w-auto cursor-pointer"
         >
           <UserPlus className="w-4 h-4" />
           Registrar Usuario
         </button>
       </div>
 
-      {/* Table */}
+      {/* Users List (Mobile Cards + Desktop Table) */}
       {loading ? (
         <div className="flex items-center justify-center py-20 text-slate-400">
           <Loader2 className="w-8 h-8 animate-spin text-indigo-500 mr-3" />
           <span>Cargando usuarios...</span>
         </div>
       ) : (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950/80 text-slate-400 border-b border-slate-800 uppercase tracking-wider font-semibold text-[10px]">
-                <tr>
-                  <th className="py-3.5 px-4">Usuario</th>
-                  <th className="py-3.5 px-4">Rol Asignado</th>
-                  <th className="py-3.5 px-4">Sucursal</th>
-                  <th className="py-3.5 px-4">Ventanilla Predeterminada</th>
-                  <th className="py-3.5 px-4">Estado</th>
-                  <th className="py-3.5 px-4 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60">
-                {users.map((u) => {
-                  const branch = branches.find(
-                    (b) => b.id === u.branchId || (u.branchId && b.name === u.branchId)
-                  );
-                  const counter = counters.find((c) => c.id === u.defaultCounterId);
-                  return (
-                    <tr key={u.uid} className="hover:bg-slate-800/30 transition">
-                      <td className="py-3.5 px-4">
-                        <div className="font-semibold text-slate-100 text-sm">{u.name}</div>
-                        <div className="text-[11px] text-slate-500 font-mono">{u.email}</div>
-                      </td>
-                      <td className="py-3.5 px-4">{getRoleBadge(u.role)}</td>
-                      <td className="py-3.5 px-4">
+        <>
+          {/* Mobile & Small Tablet Cards (< md) */}
+          <div className="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {users.map((u) => {
+              const branch = branches.find(
+                (b) => b.id === u.branchId || (u.branchId && b.name === u.branchId)
+              );
+              const counter = counters.find((c) => c.id === u.defaultCounterId);
+              return (
+                <div
+                  key={u.uid}
+                  className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col justify-between gap-3"
+                >
+                  <div className="space-y-2.5">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="font-semibold text-slate-100 text-sm truncate">{u.name}</div>
+                        <div className="text-[11px] text-slate-500 font-mono truncate">{u.email}</div>
+                      </div>
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border shrink-0 ${
+                          u.active
+                            ? 'bg-emerald-950/40 text-emerald-400 border-emerald-500/30'
+                            : 'bg-rose-950/40 text-rose-400 border-rose-500/30'
+                        }`}
+                      >
+                        {u.active ? (
+                          <>
+                            <CheckCircle className="w-2.5 h-2.5" /> Activo
+                          </>
+                        ) : (
+                          <>
+                            <XCircle className="w-2.5 h-2.5" /> Inactivo
+                          </>
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      {getRoleBadge(u.role)}
+                    </div>
+
+                    <div className="space-y-1 text-xs text-slate-400 pt-2 border-t border-slate-800/80">
+                      <div className="flex items-center gap-1.5">
+                        <Building2 className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                        <span className="text-slate-400">Sucursal:</span>
                         {branch ? (
-                          <span className="flex items-center gap-1.5 text-slate-300">
-                            <Building2 className="w-3.5 h-3.5 text-slate-500" />
-                            {branch.name}
-                          </span>
+                          <span className="text-slate-200 font-medium truncate">{branch.name}</span>
                         ) : u.role === 'admin' ? (
                           <span className="text-slate-500 italic">Acceso Global</span>
                         ) : (
                           <span className="text-amber-400">Sin sucursal</span>
                         )}
-                      </td>
-                      <td className="py-3.5 px-4">
-                        {counter ? (
-                          <span className="flex items-center gap-1.5 text-slate-300">
-                            <MonitorCheck className="w-3.5 h-3.5 text-slate-500" />
-                            {counter.name}
-                          </span>
-                        ) : (
-                          <span className="text-slate-500">--</span>
-                        )}
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${
-                            u.active
-                              ? 'bg-emerald-950/40 text-emerald-400 border-emerald-500/30'
-                              : 'bg-rose-950/40 text-rose-400 border-rose-500/30'
-                          }`}
-                        >
-                          {u.active ? (
-                            <>
-                              <CheckCircle className="w-2.5 h-2.5" /> Activo
-                            </>
+                      </div>
+
+                      {u.role === 'agent' && (
+                        <div className="flex items-center gap-1.5">
+                          <MonitorCheck className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                          <span className="text-slate-400">Ventanilla:</span>
+                          {counter ? (
+                            <span className="text-slate-200 font-medium truncate">{counter.name}</span>
                           ) : (
-                            <>
-                              <XCircle className="w-2.5 h-2.5" /> Inactivo
-                            </>
+                            <span className="text-slate-500">Al iniciar sesión</span>
                           )}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          <button
-                            onClick={() => openEditModal(u)}
-                            className="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700/80 transition flex items-center gap-1.5 cursor-pointer"
-                            title="Editar datos del usuario"
-                          >
-                            <Pencil className="w-3.5 h-3.5 text-indigo-400" />
-                            <span>Editar</span>
-                          </button>
-                          <button
-                            onClick={() => toggleUserActive(u)}
-                            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer border ${
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-slate-800/80">
+                    <button
+                      onClick={() => openEditModal(u)}
+                      className="flex-1 py-2 px-3 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700/80 transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <Pencil className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>Editar</span>
+                    </button>
+                    <button
+                      onClick={() => toggleUserActive(u)}
+                      className={`py-2 px-3 rounded-xl text-xs font-medium transition cursor-pointer border ${
+                        u.active
+                          ? 'text-rose-400 border-rose-500/20 hover:bg-rose-500/10'
+                          : 'text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/10'
+                      }`}
+                    >
+                      {u.active ? 'Desactivar' : 'Activar'}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop Table (>= md) */}
+          <div className="hidden md:block bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs text-slate-300">
+                <thead className="bg-slate-950/80 text-slate-400 border-b border-slate-800 uppercase tracking-wider font-semibold text-[10px]">
+                  <tr>
+                    <th className="py-3.5 px-4">Usuario</th>
+                    <th className="py-3.5 px-4">Rol Asignado</th>
+                    <th className="py-3.5 px-4">Sucursal</th>
+                    <th className="py-3.5 px-4">Ventanilla Predeterminada</th>
+                    <th className="py-3.5 px-4">Estado</th>
+                    <th className="py-3.5 px-4 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60">
+                  {users.map((u) => {
+                    const branch = branches.find(
+                      (b) => b.id === u.branchId || (u.branchId && b.name === u.branchId)
+                    );
+                    const counter = counters.find((c) => c.id === u.defaultCounterId);
+                    return (
+                      <tr key={u.uid} className="hover:bg-slate-800/30 transition">
+                        <td className="py-3.5 px-4">
+                          <div className="font-semibold text-slate-100 text-sm">{u.name}</div>
+                          <div className="text-[11px] text-slate-500 font-mono">{u.email}</div>
+                        </td>
+                        <td className="py-3.5 px-4">{getRoleBadge(u.role)}</td>
+                        <td className="py-3.5 px-4">
+                          {branch ? (
+                            <span className="flex items-center gap-1.5 text-slate-300">
+                              <Building2 className="w-3.5 h-3.5 text-slate-500" />
+                              {branch.name}
+                            </span>
+                          ) : u.role === 'admin' ? (
+                            <span className="text-slate-500 italic">Acceso Global</span>
+                          ) : (
+                            <span className="text-amber-400">Sin sucursal</span>
+                          )}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          {counter ? (
+                            <span className="flex items-center gap-1.5 text-slate-300">
+                              <MonitorCheck className="w-3.5 h-3.5 text-slate-500" />
+                              {counter.name}
+                            </span>
+                          ) : (
+                            <span className="text-slate-500">--</span>
+                          )}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${
                               u.active
-                                ? 'text-rose-400 border-rose-500/20 hover:bg-rose-500/10'
-                                : 'text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/10'
+                                ? 'bg-emerald-950/40 text-emerald-400 border-emerald-500/30'
+                                : 'bg-rose-950/40 text-rose-400 border-rose-500/30'
                             }`}
                           >
-                            {u.active ? 'Desactivar' : 'Activar'}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                            {u.active ? (
+                              <>
+                                <CheckCircle className="w-2.5 h-2.5" /> Activo
+                              </>
+                            ) : (
+                              <>
+                                <XCircle className="w-2.5 h-2.5" /> Inactivo
+                              </>
+                            )}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => openEditModal(u)}
+                              className="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700/80 transition flex items-center gap-1.5 cursor-pointer"
+                              title="Editar datos del usuario"
+                            >
+                              <Pencil className="w-3.5 h-3.5 text-indigo-400" />
+                              <span>Editar</span>
+                            </button>
+                            <button
+                              onClick={() => toggleUserActive(u)}
+                              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer border ${
+                                u.active
+                                  ? 'text-rose-400 border-rose-500/20 hover:bg-rose-500/10'
+                                  : 'text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/10'
+                              }`}
+                            >
+                              {u.active ? 'Desactivar' : 'Activar'}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Modal: Create & Edit User */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl w-full max-w-lg p-5 sm:p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
             <button
               onClick={() => setIsModalOpen(false)}
               className="absolute top-5 right-5 p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"

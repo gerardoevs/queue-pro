@@ -169,19 +169,19 @@ export default function ServicesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-4 sm:pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <Tag className="w-6 h-6 text-indigo-400" />
-            Servicios y Trámites
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+            <Tag className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400 shrink-0" />
+            <span>Servicios y Trámites</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Define los tipos de atención disponibles en los tótems con sus prefijos correlativos (ej. CAJ-001).
           </p>
         </div>
         <button
           onClick={openCreateModal}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 transition self-start sm:self-auto"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 transition w-full sm:w-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Nuevo Servicio
@@ -195,7 +195,7 @@ export default function ServicesPage() {
           <span>Cargando servicios...</span>
         </div>
       ) : services.length === 0 ? (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 sm:p-12 text-center">
           <Tag className="w-12 h-12 text-slate-600 mx-auto mb-3" />
           <h3 className="text-base font-semibold text-slate-200">No hay servicios configurados</h3>
           <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
@@ -203,27 +203,27 @@ export default function ServicesPage() {
           </p>
           <button
             onClick={openCreateModal}
-            className="mt-4 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition"
+            className="mt-4 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition cursor-pointer"
           >
             Crear Servicio
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {services.map((srv) => (
             <div
               key={srv.id}
-              className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between group hover:border-slate-700 transition"
+              className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl flex flex-col justify-between group hover:border-slate-700 transition"
             >
               <div>
                 <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center text-violet-400 font-bold font-mono text-sm">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-violet-600/10 border border-violet-500/20 flex items-center justify-center text-violet-400 font-bold font-mono text-sm shrink-0">
                       {srv.prefix}
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-slate-100 text-sm leading-tight">{srv.name}</h3>
-                      <span className="text-[11px] text-slate-400">
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-slate-100 text-sm leading-tight truncate">{srv.name}</h3>
+                      <span className="text-[11px] text-slate-400 block">
                         Prefijo:{' '}
                         <span className="font-mono text-indigo-400 font-semibold">{srv.prefix}-###</span>
                       </span>
@@ -232,7 +232,7 @@ export default function ServicesPage() {
 
                   <button
                     onClick={() => toggleActive(srv)}
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-medium border flex items-center gap-1 transition ${
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-medium border flex items-center gap-1 transition shrink-0 cursor-pointer ${
                       srv.active
                         ? 'bg-emerald-950/40 text-emerald-400 border-emerald-500/30'
                         : 'bg-slate-800 text-slate-400 border-slate-700'
@@ -276,14 +276,14 @@ export default function ServicesPage() {
               <div className="pt-3 border-t border-slate-800/80 flex items-center justify-end gap-2">
                 <button
                   onClick={() => openEditModal(srv)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition"
+                  className="p-2 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition cursor-pointer"
                   title="Editar Servicio"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(srv.id)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition"
+                  className="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
                   title="Eliminar Servicio"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -296,11 +296,11 @@ export default function ServicesPage() {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-5 sm:p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+              className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>

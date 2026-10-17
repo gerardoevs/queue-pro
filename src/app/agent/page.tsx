@@ -333,33 +333,48 @@ function AgentConsole() {
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
       {/* Top Operating Bar */}
-      <header className="px-6 py-4 bg-slate-900 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30 shadow-md">
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-600/30">
-            <Layers className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="font-extrabold text-base tracking-tight text-white leading-tight">
-              GEVS Queue Pro &bull; Consola de Atención
-            </h1>
-            <div className="flex items-center gap-2 text-xs text-slate-400">
-              <Building2 className="w-3.5 h-3.5 text-indigo-400" />
-              <span>{branch ? branch.name : 'Sucursal'}</span>
-              <span className="text-slate-600">&bull;</span>
-              <span className="text-slate-300 font-medium">Operador: {profile?.name}</span>
+      <header className="px-4 py-3 sm:px-6 sm:py-4 bg-slate-900 border-b border-slate-800 flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4 sticky top-0 z-30 shadow-md">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-600/30 shrink-0">
+              <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="font-extrabold text-sm sm:text-base tracking-tight text-white leading-tight truncate">
+                GEVS Queue Pro <span className="hidden sm:inline">&bull; Consola de Atención</span>
+              </h1>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] sm:text-xs text-slate-400">
+                <span className="flex items-center gap-1 truncate">
+                  <Building2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-indigo-400 shrink-0" />
+                  <span className="truncate">{branch ? branch.name : 'Sucursal'}</span>
+                </span>
+                <span className="text-slate-600">&bull;</span>
+                <span className="text-slate-300 font-medium truncate">
+                  {profile?.name}
+                </span>
+              </div>
             </div>
           </div>
+
+          {/* Mobile Logout Button */}
+          <button
+            onClick={() => logout()}
+            className="md:hidden p-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-slate-700/60 transition cursor-pointer shrink-0"
+            title="Cerrar Sesión"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
 
         {/* Counter Picker & Session */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5">
-            <MonitorCheck className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs text-slate-400 font-medium">Ventanilla:</span>
+        <div className="flex flex-wrap items-center justify-between md:justify-end gap-2 sm:gap-3">
+          <div className="flex-1 sm:flex-initial flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 min-w-0">
+            <MonitorCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span className="text-xs text-slate-400 font-medium shrink-0">Ventanilla:</span>
             <select
               value={selectedCounterId}
               onChange={(e) => setSelectedCounterId(e.target.value)}
-              className="bg-transparent text-xs font-bold text-slate-100 focus:outline-none cursor-pointer"
+              className="w-full sm:w-auto bg-transparent text-xs font-bold text-slate-100 focus:outline-none cursor-pointer truncate"
             >
               {counters.length === 0 ? (
                 <option value="">Sin ventanillas configuradas</option>
@@ -373,16 +388,17 @@ function AgentConsole() {
             </select>
           </div>
 
-          <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700 text-xs">
-            <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-800/80 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-700 text-xs shrink-0">
+            <CheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
             <span className="text-slate-300">
-              Atendidos hoy: <strong className="text-white">{myCompletedCount}</strong>
+              <span className="hidden xs:inline">Atendidos </span>hoy:{' '}
+              <strong className="text-white">{myCompletedCount}</strong>
             </span>
           </div>
 
           <button
             onClick={() => logout()}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-slate-700/60 transition cursor-pointer"
+            className="hidden md:flex p-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-slate-700/60 transition cursor-pointer"
             title="Cerrar Sesión"
           >
             <LogOut className="w-4 h-4" />
@@ -391,14 +407,14 @@ function AgentConsole() {
       </header>
 
       {/* Main Two-Column Console Layout */}
-      <main className="flex-1 p-6 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <main className="flex-1 p-4 sm:p-6 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-start">
         {/* Left Column: Active Call / Serving Workstation (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
           {/* Active Station Card */}
-          <div className="bg-slate-900 border-2 border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+          <div className="bg-slate-900 border-2 border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl relative overflow-hidden">
             {/* Background ambient glow */}
             <div
-              className={`absolute top-0 right-0 w-80 h-80 rounded-full blur-3xl pointer-events-none transition-all duration-500 ${
+              className={`absolute top-0 right-0 w-64 sm:w-80 h-64 sm:h-80 rounded-full blur-3xl pointer-events-none transition-all duration-500 ${
                 currentTicket?.status === 'serving'
                   ? 'bg-emerald-500/10'
                   : currentTicket?.status === 'calling'
@@ -407,19 +423,19 @@ function AgentConsole() {
               }`}
             />
 
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
-              <div>
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4 mb-5 sm:mb-6">
+              <div className="min-w-0">
+                <span className="text-[11px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider block">
                   Puesto de Atención Activo
                 </span>
-                <h2 className="text-lg font-bold text-white flex items-center gap-2 mt-0.5">
-                  <MonitorCheck className="w-5 h-5 text-indigo-400" />
-                  {activeCounter?.name || 'Seleccione una ventanilla'}
+                <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2 mt-0.5 truncate">
+                  <MonitorCheck className="w-5 h-5 text-indigo-400 shrink-0" />
+                  <span className="truncate">{activeCounter?.name || 'Seleccione una ventanilla'}</span>
                 </h2>
               </div>
 
               {/* Status Pill */}
-              <div>
+              <div className="self-start sm:self-auto shrink-0">
                 {currentTicket?.status === 'calling' && (
                   <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-950 text-indigo-300 border border-indigo-500/40 animate-pulse flex items-center gap-1.5">
                     <PhoneCall className="w-3.5 h-3.5" />
@@ -433,7 +449,7 @@ function AgentConsole() {
                   </span>
                 )}
                 {!currentTicket && (
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700">
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700 inline-block">
                     Ventanilla Libre
                   </span>
                 )}
@@ -441,23 +457,23 @@ function AgentConsole() {
             </div>
 
             {/* Display Box */}
-            <div className="py-6 text-center">
+            <div className="py-4 sm:py-6 text-center">
               {currentTicket ? (
-                <div className="space-y-4">
-                  <span className="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-lg">
+                <div className="space-y-3 sm:space-y-4">
+                  <span className="inline-block text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-lg">
                     {currentTicket.serviceName}
                   </span>
 
-                  <div className="py-4">
-                    <span className="text-6xl md:text-8xl font-black font-mono tracking-tight text-white block">
+                  <div className="py-2 sm:py-4">
+                    <span className="text-5xl sm:text-6xl md:text-8xl font-black font-mono tracking-tight text-white block break-all">
                       {currentTicket.ticketNumber}
                     </span>
                   </div>
 
                   {/* Timer / Timestamp info */}
                   {currentTicket.status === 'serving' ? (
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 font-mono text-sm font-semibold">
-                      <Clock className="w-4 h-4 text-emerald-400" />
+                    <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 font-mono text-xs sm:text-sm font-semibold">
+                      <Clock className="w-4 h-4 text-emerald-400 shrink-0" />
                       <span>Tiempo de atención: {formatElapsed(elapsedSeconds)}</span>
                     </div>
                   ) : (
@@ -467,35 +483,35 @@ function AgentConsole() {
                   )}
                 </div>
               ) : (
-                <div className="py-12 space-y-3">
-                  <div className="w-16 h-16 rounded-3xl bg-slate-800/80 border border-slate-700 flex items-center justify-center text-slate-500 mx-auto">
-                    <Users className="w-8 h-8" />
+                <div className="py-8 sm:py-12 space-y-3">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl bg-slate-800/80 border border-slate-700 flex items-center justify-center text-slate-500 mx-auto">
+                    <Users className="w-7 h-7 sm:w-8 sm:h-8" />
                   </div>
-                  <h3 className="text-base font-semibold text-slate-300">
+                  <h3 className="text-sm sm:text-base font-semibold text-slate-300">
                     No hay turno activo en esta ventanilla
                   </h3>
                   <p className="text-xs text-slate-500 max-w-xs mx-auto">
-                    Presione el botón "Llamar Siguiente Turno" para tomar el primer ticket de la fila.
+                    Presione el botón &quot;Llamar Siguiente Turno&quot; para tomar el primer ticket de la fila.
                   </p>
                 </div>
               )}
             </div>
 
             {/* Action Bar */}
-            <div className="mt-6 pt-6 border-t border-slate-800">
+            <div className="mt-4 sm:mt-6 pt-5 sm:pt-6 border-t border-slate-800">
               {!currentTicket ? (
                 <button
                   onClick={handleCallNext}
                   disabled={waitingQueue.length === 0 || actionLoading}
-                  className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-base shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-3 transition-all duration-200 transform hover:-translate-y-0.5 active:scale-98 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+                  className="w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-sm sm:text-base shadow-xl shadow-indigo-600/30 flex flex-wrap items-center justify-center gap-2 sm:gap-3 transition-all duration-200 transform hover:-translate-y-0.5 active:scale-98 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
                 >
                   {actionLoading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
-                      <PhoneCall className="w-5 h-5" />
-                      Llamar Siguiente Turno
-                      <span className="text-xs font-mono bg-white/20 px-2 py-0.5 rounded-lg ml-2">
+                      <PhoneCall className="w-5 h-5 shrink-0" />
+                      <span>Llamar Siguiente Turno</span>
+                      <span className="text-xs font-mono bg-white/20 px-2 py-0.5 rounded-lg">
                         {waitingQueue.length} en espera
                       </span>
                     </>
@@ -503,13 +519,13 @@ function AgentConsole() {
                 </button>
               ) : currentTicket.status === 'calling' ? (
                 <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <button
                       onClick={handleRecall}
                       disabled={actionLoading}
                       className="py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm border border-slate-700 flex items-center justify-center gap-2 transition cursor-pointer"
                     >
-                      <Volume2 className="w-4 h-4 text-indigo-400" />
+                      <Volume2 className="w-4 h-4 text-indigo-400 shrink-0" />
                       Re-llamar Turno
                     </button>
 
@@ -518,7 +534,7 @@ function AgentConsole() {
                       disabled={actionLoading}
                       className="py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 transition cursor-pointer"
                     >
-                      <Play className="w-4 h-4 fill-white" />
+                      <Play className="w-4 h-4 fill-white shrink-0" />
                       Iniciar Atención
                     </button>
                   </div>
@@ -526,10 +542,10 @@ function AgentConsole() {
                   <button
                     onClick={handleNoShow}
                     disabled={actionLoading}
-                    className="w-full py-2.5 px-4 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 font-medium text-xs border border-rose-500/30 flex items-center justify-center gap-2 transition cursor-pointer"
+                    className="w-full py-3 sm:py-2.5 px-4 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 font-medium text-xs border border-rose-500/30 flex items-center justify-center gap-2 transition cursor-pointer"
                   >
-                    <UserX className="w-4 h-4 text-rose-400" />
-                    El cliente no se presentó (Marcar Ausente / Saltar)
+                    <UserX className="w-4 h-4 text-rose-400 shrink-0" />
+                    <span>El cliente no se presentó (Ausente / Saltar)</span>
                   </button>
                 </div>
               ) : (
@@ -537,13 +553,13 @@ function AgentConsole() {
                   <button
                     onClick={handleComplete}
                     disabled={actionLoading}
-                    className="w-full py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-base shadow-xl shadow-emerald-600/30 flex items-center justify-center gap-2.5 transition cursor-pointer"
+                    className="w-full py-3.5 sm:py-4 px-5 sm:px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm sm:text-base shadow-xl shadow-emerald-600/30 flex items-center justify-center gap-2.5 transition cursor-pointer"
                   >
                     {actionLoading ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
                       <>
-                        <CheckCircle className="w-5 h-5" />
+                        <CheckCircle className="w-5 h-5 shrink-0" />
                         Finalizar Atención del Turno
                       </>
                     )}
@@ -555,11 +571,11 @@ function AgentConsole() {
         </div>
 
         {/* Right Column: Real-time Waiting Queue for this Counter (5 cols) */}
-        <div className="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col h-[600px]">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
+        <div className="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl flex flex-col min-h-[320px] max-h-[480px] lg:h-[600px] lg:max-h-none">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3.5 sm:pb-4 mb-3.5 sm:mb-4">
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-indigo-400" />
-              <h3 className="font-bold text-base text-white">Cola de Espera</h3>
+              <h3 className="font-bold text-sm sm:text-base text-white">Cola de Espera</h3>
             </div>
             <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 font-mono text-xs font-bold border border-indigo-500/20">
               {waitingQueue.length} esperando
@@ -569,8 +585,8 @@ function AgentConsole() {
           {/* Queue items list */}
           <div className="flex-1 overflow-y-auto space-y-2.5 pr-1">
             {waitingQueue.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500">
-                <CheckCircle className="w-12 h-12 text-slate-700 mb-2" />
+              <div className="h-full py-10 flex flex-col items-center justify-center text-center p-4 sm:p-6 text-slate-500">
+                <CheckCircle className="w-10 h-10 sm:w-12 sm:h-12 text-slate-700 mb-2" />
                 <p className="text-sm font-medium text-slate-400">Cola al día</p>
                 <p className="text-xs text-slate-500 mt-1">
                   No hay clientes en espera para los servicios de esta ventanilla.
@@ -582,15 +598,15 @@ function AgentConsole() {
                 return (
                   <div
                     key={ticket.id}
-                    className={`p-3.5 rounded-2xl border transition flex items-center justify-between ${
+                    className={`p-3 sm:p-3.5 rounded-2xl border transition flex items-center justify-between gap-2 ${
                       isNext
                         ? 'bg-indigo-950/40 border-indigo-500/40 shadow-md'
                         : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
                       <div
-                        className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-mono font-bold ${
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-mono font-bold shrink-0 ${
                           isNext
                             ? 'bg-indigo-600 text-white'
                             : 'bg-slate-800 text-slate-400'
@@ -599,15 +615,15 @@ function AgentConsole() {
                         {index + 1}
                       </div>
 
-                      <div>
-                        <span className="font-mono font-bold text-base text-white">
+                      <div className="min-w-0">
+                        <span className="font-mono font-bold text-sm sm:text-base text-white block">
                           {ticket.ticketNumber}
                         </span>
-                        <p className="text-xs text-slate-400">{ticket.serviceName}</p>
+                        <p className="text-xs text-slate-400 truncate">{ticket.serviceName}</p>
                       </div>
                     </div>
 
-                    <div className="text-right">
+                    <div className="text-right shrink-0">
                       <span className="text-[11px] font-mono text-slate-400 block">
                         {formatTime(ticket.createdAt)}
                       </span>

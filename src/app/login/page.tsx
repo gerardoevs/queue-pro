@@ -234,7 +234,7 @@ export default function LoginPage() {
         )}
 
         {/* Login Card */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-7 shadow-2xl backdrop-blur-xl">
+        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-2xl backdrop-blur-xl">
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">

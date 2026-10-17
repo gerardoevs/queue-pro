@@ -148,21 +148,21 @@ export default function SettingsPage() {
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-4 sm:pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
-            <Settings className="w-6 h-6 text-indigo-400" />
-            Configuración de Empresa & Ticket
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+            <Settings className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400 shrink-0" />
+            <span>Configuración de Empresa & Ticket</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Personaliza los datos corporativos, diseño de tickets térmicos y prueba de hardware Bluetooth.
           </p>
         </div>
 
         {/* Hardware Status Header Pill */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <PrinterStatusButton />
 
           {isConnected && (
@@ -179,12 +179,12 @@ export default function SettingsPage() {
       </div>
 
       {/* Main Grid: Form Left, Preview Right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
         {/* Form Column */}
-        <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-6">
+        <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-5 sm:space-y-6">
           {/* Company Data Card */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-            <h2 className="text-base font-semibold text-white flex items-center gap-2">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl space-y-4">
+            <h2 className="text-sm sm:text-base font-semibold text-white flex items-center gap-2">
               Datos de la Empresa y Título del Ticket
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -194,13 +194,13 @@ export default function SettingsPage() {
                   <label className="block text-xs font-medium text-slate-300">
                     Cantidad de líneas del título en el ticket
                   </label>
-                  <div className="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800">
+                  <div className="inline-flex flex-wrap rounded-xl bg-slate-950 p-1 border border-slate-800 self-start sm:self-auto">
                     {[1, 2, 3, 4].map((num) => (
                       <button
                         key={num}
                         type="button"
                         onClick={() => handleTitleLinesCountChange(num)}
-                        className={`px-3 py-1 rounded-lg text-xs font-semibold transition cursor-pointer ${
+                        className={`px-2.5 sm:px-3 py-1 rounded-lg text-xs font-semibold transition cursor-pointer ${
                           titleLinesCount === num
                             ? 'bg-indigo-600 text-white shadow'
                             : 'text-slate-400 hover:text-slate-200'
@@ -288,8 +288,8 @@ export default function SettingsPage() {
           </div>
 
           {/* Ticket Printing Configuration Card */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-            <h2 className="text-base font-semibold text-white flex items-center gap-2">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl space-y-4">
+            <h2 className="text-sm sm:text-base font-semibold text-white flex items-center gap-2">
               Configuración del Ticket Térmico
             </h2>
 
@@ -325,11 +325,11 @@ export default function SettingsPage() {
                 <label className="block text-xs font-medium text-slate-300 mb-2">
                   Ancho de Papel de la Impresora
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                   <button
                     type="button"
                     onClick={() => handleChange('paperWidth', '58mm')}
-                    className={`py-2.5 px-4 rounded-xl text-xs font-semibold border transition text-center ${
+                    className={`py-2.5 px-4 rounded-xl text-xs font-semibold border transition text-center cursor-pointer ${
                       settings.paperWidth === '58mm'
                         ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/20'
                         : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'
@@ -340,7 +340,7 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={() => handleChange('paperWidth', '80mm')}
-                    className={`py-2.5 px-4 rounded-xl text-xs font-semibold border transition text-center ${
+                    className={`py-2.5 px-4 rounded-xl text-xs font-semibold border transition text-center cursor-pointer ${
                       settings.paperWidth === '80mm'
                         ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/20'
                         : 'bg-slate-950 text-slate-400 border-slate-800 hover:border-slate-700'
@@ -352,28 +352,28 @@ export default function SettingsPage() {
               </div>
 
               {/* Toggles */}
-              <div className="pt-2 border-t border-slate-800 space-y-3">
-                <label className="flex items-center justify-between cursor-pointer p-2.5 rounded-xl hover:bg-slate-800/40 transition">
+              <div className="pt-2 border-t border-slate-800 space-y-2 sm:space-y-3">
+                <label className="flex items-center justify-between gap-3 cursor-pointer p-2.5 rounded-xl hover:bg-slate-800/40 transition">
                   <span className="text-xs text-slate-300">Mostrar nombre de la sucursal</span>
                   <input
                     type="checkbox"
                     checked={settings.showBranch}
                     onChange={(e) => handleChange('showBranch', e.target.checked)}
-                    className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-700 bg-slate-950"
+                    className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-700 bg-slate-950 shrink-0"
                   />
                 </label>
 
-                <label className="flex items-center justify-between cursor-pointer p-2.5 rounded-xl hover:bg-slate-800/40 transition">
+                <label className="flex items-center justify-between gap-3 cursor-pointer p-2.5 rounded-xl hover:bg-slate-800/40 transition">
                   <span className="text-xs text-slate-300">Mostrar fecha y hora de emisión</span>
                   <input
                     type="checkbox"
                     checked={settings.showDateTime}
                     onChange={(e) => handleChange('showDateTime', e.target.checked)}
-                    className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-700 bg-slate-950"
+                    className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-700 bg-slate-950 shrink-0"
                   />
                 </label>
 
-                <label className="flex items-center justify-between cursor-pointer p-2.5 rounded-xl hover:bg-slate-800/40 transition">
+                <label className="flex items-center justify-between gap-3 cursor-pointer p-2.5 rounded-xl hover:bg-slate-800/40 transition">
                   <span className="text-xs text-slate-300">
                     Mostrar personas en espera por delante
                   </span>
@@ -381,7 +381,7 @@ export default function SettingsPage() {
                     type="checkbox"
                     checked={settings.showQueueCount}
                     onChange={(e) => handleChange('showQueueCount', e.target.checked)}
-                    className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-700 bg-slate-950"
+                    className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-slate-700 bg-slate-950 shrink-0"
                   />
                 </label>
               </div>
@@ -389,11 +389,11 @@ export default function SettingsPage() {
           </div>
 
           {/* Submit Action */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm shadow-lg shadow-indigo-600/25 flex items-center gap-2 transition disabled:opacity-50"
+              className="w-full sm:w-auto justify-center px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm shadow-lg shadow-indigo-600/25 flex items-center gap-2 transition disabled:opacity-50 cursor-pointer"
             >
               {saving ? (
                 <>
@@ -410,14 +410,14 @@ export default function SettingsPage() {
 
             {saveSuccess && (
               <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
-                <CheckCircle2 className="w-4 h-4" />
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>Configuración guardada correctamente</span>
               </div>
             )}
 
             {error && (
               <div className="flex items-center gap-1.5 text-xs text-rose-400 font-medium">
-                <AlertCircle className="w-4 h-4" />
+                <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -425,8 +425,8 @@ export default function SettingsPage() {
         </form>
 
         {/* Live Preview Sticky Column */}
-        <div className="lg:col-span-5 sticky top-8">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col items-center">
+        <div className="lg:col-span-5 lg:sticky lg:top-8">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl flex flex-col items-center">
             <TicketPreview settings={settings} />
             <p className="text-[11px] text-slate-500 text-center mt-4 max-w-xs">
               Esta simulación se actualiza en tiempo real reflejando el aspecto exacto que tendrá en papel térmico físico.
