@@ -1,0 +1,112 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ==========================================
+    // FUNCIONES AUXILIARES DE SEGURIDAD (RBAC)
+    // ==========================================
+
+    // Verifica si la base de datos está en estado de instalación inicial
+    // (Si aún no existe el documento settings/general, permite la inicialización inicial)
+    function isBootstrap() {
+      return !exists(/databases/$(database)/documents/settings/general);
+    }
+
+    // Verifica si la solicitud proviene de un usuario autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Obtiene el documento del perfil de usuario actual en Firestore
+    function getUserProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // Comprueba si el usuario tiene un rol específico y su cuenta está activa
+    function hasRole(role) {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        getUserProfile().role == role &&
+        getUserProfile().active == true;
+    }
+
+    // Roles del sistema
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    function isAgent() {
+      return hasRole('agent');
+    }
+
+    function isKiosk() {
+      return hasRole('kiosk');
+    }
+
+    // ==========================================
+    // 1. COLECCIÓN DE USUARIOS (/users/{userId})
+    // ==========================================
+    match /users/{userId} {
+      // Permitir lectura si está autenticado o durante el bootstrap inicial
+      allow read: if isAuthenticated() || isBootstrap();
+
+      // Permitir creación durante bootstrap inicial, por admin o por el propio usuario
+      allow create: if isBootstrap() || (isAuthenticated() && (isAdmin() || request.auth.uid == userId));
+
+      // Actualizar y eliminar: Solo administradores
+      allow update, delete: if isAdmin();
+    }
+
+    // ==========================================
+    // 2. CONFIGURACIÓN DEL SISTEMA (/settings/{docId})
+    // ==========================================
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() || isBootstrap();
+    }
+
+    // ==========================================
+    // 3. SUCURSALES (/branches/{branchId})
+    // ==========================================
+    match /branches/{branchId} {
+      allow read: if isAuthenticated() || isBootstrap();
+      allow write: if isAdmin() || isBootstrap();
+    }
+
+    // ==========================================
+    // 4. SERVICIOS (/services/{serviceId})
+    // ==========================================
+    match /services/{serviceId} {
+      allow read: if isAuthenticated() || isBootstrap();
+      allow write: if isAdmin() || isBootstrap();
+    }
+
+    // ==========================================
+    // 5. VENTANILLAS (/counters/{counterId})
+    // ==========================================
+    match /counters/{counterId} {
+      allow read: if isAuthenticated() || isBootstrap();
+      allow write: if isAdmin() || isBootstrap();
+    }
+
+    // ==========================================
+    // 6. CONTADORES DIARIOS (/daily_counters/{counterId})
+    // ==========================================
+    match /daily_counters/{counterId} {
+      allow read: if isAuthenticated() || isBootstrap();
+      allow create, update: if isKiosk() || isAdmin() || isBootstrap();
+      allow delete: if isAdmin();
+    }
+
+    // ==========================================
+    // 7. TICKETS DE ATENCIÓN (/tickets/{ticketId})
+    // ==========================================
+    match /tickets/{ticketId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && (isKiosk() || isAdmin());
+      allow update: if isAuthenticated() && (isAgent() || isAdmin());
+      allow delete: if isAdmin();
+    }
+  }
+}
