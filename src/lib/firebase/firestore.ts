@@ -36,6 +36,13 @@ export const DEFAULT_SETTINGS: SystemSettings = {
   showDateTime: true,
   showQueueCount: true,
   paperWidth: '58mm',
+  theme: 'dark',
+  showLogo: false,
+  logoSizePreset: 'medium',
+  logoDither: 'threshold',
+  logoThreshold: 145,
+  logoInvert: false,
+  logoScaleMode: 'fast',
 };
 
 // 1. Settings functions

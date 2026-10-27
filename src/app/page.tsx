@@ -3,10 +3,12 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useSettings } from '@/context/SettingsContext';
 import { Loader2 } from 'lucide-react';
 
 export default function HomePage() {
   const { user, profile, loading } = useAuth();
+  const { companyName } = useSettings();
   const router = useRouter();
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export default function HomePage() {
         <div className="w-12 h-12 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
           <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
         </div>
-        <p className="text-sm text-slate-400">Cargando GEVS Queue Pro...</p>
+        <p className="text-sm text-slate-400">Cargando {companyName}...</p>
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { useAuth } from '@/context/AuthContext';
+import { useSettings } from '@/context/SettingsContext';
 import { AuthGuard } from '@/components/auth/AuthGuard';
 import { getTodayDateString, formatTime } from '@/lib/utils';
 import { playQueueChime } from '@/lib/audio/chime';
@@ -44,6 +45,7 @@ export default function AgentPage() {
 
 function AgentConsole() {
   const { user, profile, logout } = useAuth();
+  const { companyName } = useSettings();
   const [todayDateString, setTodayDateString] = useState<string>('');
 
   useEffect(() => {
@@ -341,7 +343,7 @@ function AgentConsole() {
             </div>
             <div className="min-w-0">
               <h1 className="font-extrabold text-sm sm:text-base tracking-tight text-white leading-tight truncate">
-                GEVS Queue Pro <span className="hidden sm:inline">&bull; Consola de Atención</span>
+                {companyName} <span className="hidden sm:inline">&bull; Consola de Atención</span>
               </h1>
               <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] sm:text-xs text-slate-400">
                 <span className="flex items-center gap-1 truncate">

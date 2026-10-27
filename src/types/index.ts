@@ -15,6 +15,19 @@ export interface SystemSettings {
   showDateTime: boolean;
   showQueueCount: boolean;
   paperWidth: '58mm' | '80mm';
+  theme?: 'dark' | 'light';
+  // Thermal Logo settings (optimized for NETUM NT-1809)
+  showLogo?: boolean;
+  logoDataUrl?: string; // 1-bit processed preview PNG DataURL
+  logoSourceDataUrl?: string; // Resized source image DataURL for re-adjusting threshold/size
+  logoRasterBase64?: string; // 1-bit packed ESC/POS raster bytes in base64
+  logoWidth?: number; // Width in dots (multiple of 8)
+  logoHeight?: number; // Height in dots
+  logoSizePreset?: 'small' | 'medium' | 'large'; // 144px | 184px | 224px
+  logoScaleMode?: 'fast' | 'hd'; // 'fast' uses GS v 0 m=3 (4x fewer bytes, instant print); 'hd' uses m=0
+  logoDither?: 'threshold' | 'atkinson';
+  logoThreshold?: number; // 0-255 brightness threshold
+  logoInvert?: boolean;
 }
 
 export interface Branch {

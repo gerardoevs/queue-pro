@@ -13,14 +13,24 @@ export function TicketPreview({ settings, branchName = 'Sucursal Central' }: Tic
   const is58mm = settings.paperWidth === '58mm';
   const widthClass = is58mm ? 'max-w-[280px]' : 'max-w-[360px]';
 
-  const rawLines =
-    settings.titleLines && settings.titleLines.length > 0
-      ? settings.titleLines.slice(0, settings.titleLinesCount || settings.titleLines.length)
-      : (settings.companyName || 'GEVS QUEUE PRO').split(/\r?\n/);
+  const defaultTitle = settings.companyName || 'GEVS QUEUE PRO';
+  const hasCustomTitleLines =
+    settings.titleLines &&
+    settings.titleLines.length > 0 &&
+    !(
+      settings.titleLines.length === 1 &&
+      settings.titleLines[0]?.trim().toLowerCase() === 'gevs queue pro' &&
+      settings.companyName &&
+      settings.companyName.trim().toLowerCase() !== 'gevs queue pro'
+    );
+
+  const rawLines = hasCustomTitleLines
+    ? settings.titleLines!.slice(0, settings.titleLinesCount || settings.titleLines!.length)
+    : defaultTitle.split(/\r?\n/);
 
   const displayTitleLines = rawLines.map((l) => l.trim()).filter((l) => l.length > 0);
   if (displayTitleLines.length === 0) {
-    displayTitleLines.push('GEVS QUEUE PRO');
+    displayTitleLines.push(defaultTitle);
   }
 
   return (
@@ -32,16 +42,25 @@ export function TicketPreview({ settings, branchName = 'Sucursal Central' }: Tic
 
       {/* Simulated thermal ticket paper */}
       <div
-        className={`${widthClass} w-full bg-amber-50/95 text-slate-900 rounded-sm shadow-2xl p-5 font-mono text-xs select-none transition-all duration-300 relative border-t-8 border-slate-300/60`}
+        className={`thermal-ticket-paper ${widthClass} w-full bg-amber-50/95 text-slate-900 rounded-sm shadow-2xl p-5 font-mono text-xs select-none transition-all duration-300 relative border-t-8 border-slate-300/60`}
         style={{
-          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3)',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.15)',
         }}
       >
         {/* Paper top edge cut teeth pattern */}
         <div className="absolute -top-2 left-0 right-0 h-2 bg-repeat-x bg-[radial-gradient(circle,transparent_50%,#fffbeb_50%)] bg-[length:10px_10px]" />
 
-        {/* Company Header */}
-        <div className="text-center space-y-1 pb-3 border-b border-dashed border-slate-400/80">
+        {/* Company Header & Logo */}
+        <div className="text-center space-y-1.5 pb-3 border-b border-dashed border-slate-400/80">
+          {settings.showLogo && (settings.logoDataUrl || settings.logoSourceDataUrl) && (
+            <div className="flex justify-center pb-1.5">
+              <img
+                src={settings.logoDataUrl || settings.logoSourceDataUrl}
+                alt="Logo del Ticket"
+                className="max-h-20 max-w-[170px] h-auto object-contain mx-auto"
+              />
+            </div>
+          )}
           <div className="font-bold text-sm tracking-tight text-slate-950 uppercase leading-tight space-y-0.5">
             {displayTitleLines.map((line, idx) => (
               <div key={idx} className="text-center break-words">

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useSettings } from '@/context/SettingsContext';
 import { checkIfUsersExist, seedInitialSystemData, type SeedResult } from '@/lib/firebase/seed';
 import {
   Layers,
@@ -20,6 +21,7 @@ import {
 
 export default function LoginPage() {
   const { user, profile, login } = useAuth();
+  const { companyName } = useSettings();
   const router = useRouter();
 
   const [email, setEmail] = useState('');
@@ -152,7 +154,7 @@ export default function LoginPage() {
             </div>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            GEVS Queue Pro
+            {companyName}
           </h1>
           <p className="text-sm text-slate-400 mt-1">
             Gestión Inteligente de Turnos y Colas en Tiempo Real

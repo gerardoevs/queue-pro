@@ -67,10 +67,20 @@ function KioskContent() {
   const [printStatus, setPrintStatus] = useState<'printing' | 'printed' | 'failed' | 'not_connected'>('not_connected');
   const [countdown, setCountdown] = useState<number>(6);
 
-  // 1. Load System Settings
+  // 1. Load System Settings in real time
   useEffect(() => {
     if (!user) return;
     getSystemSettings().then((s) => setSettings(s));
+    const unsub = onSnapshot(
+      doc(db, 'settings', 'general'),
+      (snap) => {
+        if (snap.exists()) {
+          setSettings({ ...DEFAULT_SETTINGS, ...(snap.data() as SystemSettings) });
+        }
+      },
+      () => { }
+    );
+    return () => unsub();
   }, [user]);
 
   // 2. Load Branch
@@ -212,10 +222,10 @@ function KioskContent() {
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
+      document.documentElement.requestFullscreen().catch(() => { });
       setIsFullscreen(true);
     } else {
-      document.exitFullscreen().catch(() => {});
+      document.exitFullscreen().catch(() => { });
       setIsFullscreen(false);
     }
   };
@@ -267,13 +277,20 @@ function KioskContent() {
       {/* Main Touch Area */}
       <main className="flex-1 flex flex-col justify-center items-center px-4 py-6 sm:p-6 md:p-8 max-w-6xl mx-auto w-full">
         {/* Welcome message */}
-        <div className="text-center mb-6 sm:mb-10 space-y-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[11px] sm:text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 shrink-0" />
-            Tome su turno de atención
-          </span>
+        <div className="text-center mb-6 sm:mb-10 space-y-3">
+          {(settings.logoSourceDataUrl || settings.logoDataUrl) && (
+            <div className="flex justify-center mb-3 sm:mb-4">
+              <div className="bg-white p-3 sm:p-4 rounded-2xl sm:rounded-3xl shadow-xl border border-slate-200/80 inline-flex items-center justify-center">
+                <img
+                  src={settings.logoSourceDataUrl || settings.logoDataUrl}
+                  alt={settings.companyName || 'Logo'}
+                  className="max-h-20 sm:max-h-28 md:max-h-32 max-w-[220px] sm:max-w-[280px] object-contain"
+                />
+              </div>
+            </div>
+          )}
           <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white px-2">
-            ¿En qué podemos ayudarle hoy?
+            ¡Bienvenidos a <span>{settings.companyName}</span>!
           </h2>
           <p className="text-xs sm:text-sm md:text-base text-slate-400 max-w-lg mx-auto px-2">
             Por favor toque la opción de su preferencia en la pantalla para imprimir su turno.
@@ -296,13 +313,13 @@ function KioskContent() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full max-w-4xl">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 w-full max-w-4xl mx-auto">
             {services.map((srv) => (
               <button
                 key={srv.id}
                 onClick={() => handleSelectService(srv)}
                 disabled={generating}
-                className="group relative bg-gradient-to-b from-slate-800/90 to-slate-900/90 hover:from-indigo-900/40 hover:to-slate-900 border-2 border-slate-700/80 hover:border-indigo-500 rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-8 text-left shadow-2xl transition-all duration-200 transform hover:-translate-y-1 active:scale-95 disabled:opacity-50 cursor-pointer flex flex-col justify-between min-h-[140px] sm:min-h-[175px] md:min-h-[190px] overflow-hidden"
+                className="group relative bg-gradient-to-b from-slate-800/90 to-slate-900/90 hover:from-indigo-900/40 hover:to-slate-900 border-2 border-slate-700/80 hover:border-indigo-500 rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-8 text-left shadow-2xl transition-all duration-200 transform hover:-translate-y-1 active:scale-95 disabled:opacity-50 cursor-pointer flex flex-col justify-between min-h-[140px] sm:min-h-[175px] md:min-h-[190px] overflow-hidden w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
               >
                 {/* Glow accent */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition" />
@@ -332,7 +349,7 @@ function KioskContent() {
 
       {/* Discreet Footer */}
       <footer className="py-3 sm:py-4 px-4 text-center text-[11px] sm:text-xs text-slate-600 border-t border-slate-900">
-        GEVS Queue Pro &copy; {currentYear || 2026} &bull; Terminal de Autoservicio
+        {settings.companyName || 'GEVS Queue Pro'} &copy; {currentYear || 2026} &bull; Terminal de Autoservicio
       </footer>
 
       {/* Ticket Success / Print Modal */}

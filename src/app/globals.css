@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+:root,
+html.dark {
+  --background: #020617;
+  --foreground: #f1f5f9;
 }
 
 @theme inline {
@@ -12,15 +13,141 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ==========================================================================
+   LIGHT MODE THEME OVERRIDES (Triggered via html.light / data-theme="light")
+   ========================================================================== */
+html.light {
+  --background: #f1f5f9;
+  --foreground: #0f172a;
+
+  /* Invert Slate scale for surfaces, borders, and typography */
+  --color-slate-950: #f1f5f9;
+  --color-slate-900: #ffffff;
+  --color-slate-800: #e2e8f0;
+  --color-slate-700: #cbd5e1;
+  --color-slate-600: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-400: #475569;
+  --color-slate-300: #334155;
+  --color-slate-200: #1e293b;
+  --color-slate-100: #0f172a;
+  --color-slate-50: #020617;
+
+  /* Accent semantic tints & text contrast for Light Mode */
+  --color-indigo-950: #eef2ff;
+  --color-indigo-900: #e0e7ff;
+  --color-indigo-400: #4f46e5;
+  --color-indigo-300: #4338ca;
+  --color-indigo-200: #3730a3;
+
+  --color-emerald-950: #ecfdf5;
+  --color-emerald-900: #d1fae5;
+  --color-emerald-400: #059669;
+  --color-emerald-300: #047857;
+  --color-emerald-200: #065f46;
+
+  --color-amber-950: #fffbeb;
+  --color-amber-900: #fef3c7;
+  --color-amber-400: #d97706;
+  --color-amber-300: #b45309;
+  --color-amber-200: #92400e;
+
+  --color-rose-950: #fff1f2;
+  --color-rose-900: #ffe4e6;
+  --color-rose-400: #e11d48;
+  --color-rose-300: #be123c;
+  --color-rose-200: #9f1239;
+
+  --color-blue-950: #eff6ff;
+  --color-blue-900: #dbeafe;
+  --color-blue-400: #2563eb;
+  --color-blue-300: #1d4ed8;
+  --color-blue-200: #1e40af;
+
+  --color-purple-950: #faf5ff;
+  --color-purple-900: #f3e8ff;
+  --color-purple-400: #9333ea;
+  --color-purple-300: #7e22ce;
+  --color-purple-200: #6b21a8;
+
+  --color-violet-400: #7c3aed;
+}
+
+/* Convert general .text-white headings/values to dark slate in Light Mode,
+   while preserving pure white text inside solid/gradient accent buttons & badges */
+html.light .text-white {
+  color: #0f172a;
+}
+
+html.light .hover\:text-white:hover {
+  color: #0f172a;
+}
+
+html.light .bg-indigo-600,
+html.light .bg-indigo-600.text-white,
+html.light .bg-indigo-600 .text-white,
+html.light .bg-emerald-600,
+html.light .bg-emerald-600.text-white,
+html.light .bg-emerald-600 .text-white,
+html.light .bg-blue-600,
+html.light .bg-blue-600.text-white,
+html.light .bg-blue-600 .text-white,
+html.light .bg-purple-600,
+html.light .bg-purple-600.text-white,
+html.light .bg-purple-600 .text-white,
+html.light .from-indigo-600,
+html.light .from-indigo-600.text-white,
+html.light .from-indigo-600 .text-white,
+html.light .from-emerald-600,
+html.light .from-emerald-600.text-white,
+html.light .from-emerald-600 .text-white,
+html.light .group:hover .group-hover\:bg-indigo-600.group-hover\:text-white {
+  color: #ffffff !important;
+}
+
+/* Refine inputs & form controls inside white cards in Light Mode */
+html.light input:not([type="checkbox"]):not([type="range"]),
+html.light select,
+html.light textarea {
+  background-color: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+html.light select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+/* Soften card shadows in Light Mode for a clean modern elevation */
+html.light .shadow-xl,
+html.light .shadow-2xl {
+  --tw-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
+
+/* Ensure modal backdrops remain dim translucent overlays in Light Mode */
+html.light div.fixed.inset-0.backdrop-blur-sm,
+html.light div.fixed.inset-0.backdrop-blur-md {
+  background-color: rgba(15, 23, 42, 0.5) !important;
+}
+
+/* Preserve physical thermal paper appearance in both Dark and Light modes */
+.thermal-ticket-paper {
+  --color-slate-950: #020617;
+  --color-slate-900: #0f172a;
+  --color-slate-800: #1e293b;
+  --color-slate-700: #334155;
+  --color-slate-600: #475569;
+  --color-slate-500: #64748b;
+  --color-slate-400: #94a3b8;
+  --color-slate-300: #cbd5e1;
+  background-color: #fffbeb !important;
+  color: #0f172a !important;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }

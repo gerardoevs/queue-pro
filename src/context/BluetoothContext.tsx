@@ -1,8 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { getBluetoothPrinter, WebBluetoothPrinter, PrinterState } from '@/lib/bluetooth/printer';
-import { buildTicketEscPos, EscPosEncoder } from '@/lib/bluetooth/escpos';
+import { getBluetoothPrinter, WebBLEPrinter, WebBluetoothPrinter, PrinterState } from '@/lib/bluetooth/printer';
+import { getSystemSettings } from '@/lib/firebase/firestore';
 import type { Ticket, SystemSettings } from '@/types';
 
 interface BluetoothContextType {
@@ -16,6 +16,7 @@ interface BluetoothContextType {
   reconnectAttempts: number;
   maxReconnectAttempts: number;
   error: string | null;
+  printer: WebBLEPrinter;
   connect: () => Promise<boolean>;
   connectSerial: () => Promise<boolean>;
   reconnect: () => Promise<boolean>;
@@ -28,7 +29,7 @@ interface BluetoothContextType {
     branchName?: string,
     peopleAhead?: number
   ) => Promise<boolean>;
-  testPrint: () => Promise<boolean>;
+  testPrint: (customSettings?: SystemSettings) => Promise<boolean>;
 }
 
 const BluetoothContext = createContext<BluetoothContextType | undefined>(undefined);
@@ -46,8 +47,8 @@ export function BluetoothProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setIsSupported(WebBluetoothPrinter.isSupported());
-    setIsSerialSupported(WebBluetoothPrinter.isSerialSupported());
+    setIsSupported(WebBLEPrinter.isSupported());
+    setIsSerialSupported(WebBLEPrinter.isSerialSupported());
     const printer = getBluetoothPrinter();
     const initialState = printer.getState();
 
@@ -178,8 +179,7 @@ export function BluetoothProvider({ children }: { children: React.ReactNode }) {
     ): Promise<boolean> => {
       const printer = getBluetoothPrinter();
       try {
-        const buffer = buildTicketEscPos(ticket, settings, branchName, peopleAhead);
-        await printer.print(buffer);
+        await printer.printTicketWithLibrary(ticket, settings, branchName, peopleAhead);
         return true;
       } catch (err: any) {
         console.error('Print ticket failed:', err);
@@ -190,25 +190,11 @@ export function BluetoothProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  const testPrint = useCallback(async (): Promise<boolean> => {
+  const testPrint = useCallback(async (customSettings?: SystemSettings): Promise<boolean> => {
     const printer = getBluetoothPrinter();
     try {
-      const encoder = new EscPosEncoder();
-      encoder
-        .align('center')
-        .bold(true)
-        .size('large')
-        .line('GEVS QUEUE PRO')
-        .size('normal')
-        .bold(false)
-        .line('PRUEBA DE CONEXION')
-        .line('Impresora Termica OK')
-        .separator('58mm', '=')
-        .line(new Date().toLocaleString())
-        .cut(false)
-        .init();
-
-      await printer.print(encoder.getBuffer());
+      const activeSettings = customSettings ?? (await getSystemSettings().catch(() => null));
+      await printer.printTestWithLibrary(activeSettings);
       return true;
     } catch (err: any) {
       console.error('Test print failed:', err);
@@ -230,6 +216,7 @@ export function BluetoothProvider({ children }: { children: React.ReactNode }) {
         reconnectAttempts,
         maxReconnectAttempts,
         error,
+        printer: getBluetoothPrinter(),
         connect,
         connectSerial,
         reconnect,

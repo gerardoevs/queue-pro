@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useSettings } from '@/context/SettingsContext';
 import {
   LayoutDashboard,
   Building2,
@@ -11,6 +12,7 @@ import {
   MonitorCheck,
   Users,
   Settings,
+  Printer,
   LogOut,
   Layers,
   ChevronRight,
@@ -26,12 +28,14 @@ const NAV_ITEMS = [
   { href: '/admin/services', label: 'Servicios', icon: Tag },
   { href: '/admin/counters', label: 'Ventanillas', icon: MonitorCheck },
   { href: '/admin/users', label: 'Gestión de Usuarios', icon: Users },
-  { href: '/admin/settings', label: 'Configuración & Ticket', icon: Settings },
+  { href: '/admin/ticket', label: 'Diseño del Ticket', icon: Printer },
+  { href: '/admin/settings', label: 'Configuración General', icon: Settings },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
   const { profile, logout } = useAuth();
+  const { companyName } = useSettings();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Close drawer on route change
@@ -58,12 +62,12 @@ export function AdminSidebar() {
       {/* Mobile & Tablet Top Bar (< lg) */}
       <header className="lg:hidden sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex items-center justify-between">
         <Link href="/admin" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/30">
+          <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/30 shrink-0">
             <Layers className="w-4 h-4" />
           </div>
-          <div>
-            <h1 className="font-bold text-sm tracking-tight text-white leading-tight">
-              GEVS Queue Pro
+          <div className="min-w-0">
+            <h1 className="font-bold text-sm tracking-tight text-white leading-tight truncate max-w-[160px]" title={companyName}>
+              {companyName}
             </h1>
             <span className="text-[10px] font-medium text-indigo-400 block leading-none mt-0.5">
               {activeNav ? activeNav.label : 'Panel Admin'}
@@ -98,13 +102,13 @@ export function AdminSidebar() {
       >
         {/* Brand */}
         <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between">
-          <Link href="/admin" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/30 group-hover:scale-105 transition">
+          <Link href="/admin" className="flex items-center gap-3 group min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-600/30 group-hover:scale-105 transition shrink-0">
               <Layers className="w-5 h-5" />
             </div>
-            <div>
-              <h1 className="font-bold text-sm tracking-tight text-white leading-tight">
-                GEVS Queue Pro
+            <div className="min-w-0">
+              <h1 className="font-bold text-sm tracking-tight text-white leading-tight truncate max-w-[150px]" title={companyName}>
+                {companyName}
               </h1>
               <span className="text-[11px] font-medium text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded">
                 Panel Admin

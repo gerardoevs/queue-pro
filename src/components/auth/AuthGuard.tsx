@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useSettings } from '@/context/SettingsContext';
 import { useRouter } from 'next/navigation';
 import type { UserRole } from '@/types';
 import { Loader2 } from 'lucide-react';
@@ -13,6 +14,7 @@ interface AuthGuardProps {
 
 export function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
   const { user, profile, loading } = useAuth();
+  const { companyName } = useSettings();
   const router = useRouter();
 
   const isAuthorized = Boolean(
@@ -44,7 +46,7 @@ export function AuthGuard({ children, allowedRoles }: AuthGuardProps) {
             <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
           </div>
           <div className="text-center">
-            <h2 className="text-lg font-semibold tracking-tight text-slate-100">GEVS Queue Pro</h2>
+            <h2 className="text-lg font-semibold tracking-tight text-slate-100">{companyName}</h2>
             <p className="text-sm text-slate-400">Verificando credenciales y permisos...</p>
           </div>
         </div>
